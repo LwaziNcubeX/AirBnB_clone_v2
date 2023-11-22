@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 """ Module for testing file storage"""
 import unittest
+
+import models
 from models.base_model import BaseModel
 from models import storage
 import os
@@ -107,3 +109,35 @@ class test_fileStorage(unittest.TestCase):
         from models.engine.file_storage import FileStorage
         print(type(storage))
         self.assertEqual(type(storage), FileStorage)
+
+    def test_create_with_params(self):
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.onecmd('create State name="California" number_rooms=2')
+            state_id = f.getvalue().strip()
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.onecmd('create Place name="My little house" price_by_night=300 '
+                        'latitude=37.773972 longitude=-122.431297')
+            place_id = f.getvalue().strip()
+        with patch('sys.stdout', new=StringIO()) as f:
+            self.onecmd('create Place name="My other house" bad_param=123')
+            new_place_id = f.getvalue().strip()
+
+        # Check that the objects were actually created
+        self.assertIsNotNone(models.storage.get('State', state_id))
+        self.assertIsNotNone(models.storage.get('Place', place_id))
+        self.assertIsNotNone(models.storage.get('Place', new_place_id))
+
+        # Check that the objects have the correct attributes
+        state = models.storage.get('State', state_id)
+        self.assertEqual(state.name, 'California')
+        self.assertEqual(state.number_rooms, 2)
+
+        place = models.storage.get('Place', place_id)
+        self.assertEqual(place.name, 'My little house')
+        self.assertEqual(place.price_by_night, 300)
+        self.assertEqual(place.latitude, 37.773972)
+        self.assertEqual(place.longitude, -122.431297)
+
+        new_place = models.storage.get('Place', new_place_id)
+        self.assertEqual(new_place.name, 'My other house')
+        self.assertIsNone(new_place.bad_param)
