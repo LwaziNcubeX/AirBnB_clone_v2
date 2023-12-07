@@ -12,10 +12,10 @@ sudo touch /data/web_static/releases/test/index.html
 # Create a simple HTML content for testing
 echo "<html>
   <head>
-    <title>Test Page</title>
+    <title>AirBnB clone</title>
   </head>
   <body>
-    <p>This is a test page for Nginx configuration.</p>
+    <p>0x03. AirBnB clone - Deploy static</p>
   </body>
 </html>" | sudo tee /data/web_static/releases/test/index.html > /dev/null
 
