@@ -16,13 +16,15 @@ class State(BaseModel, Base):
     HBNB_TYPE_STORAGE = os.getenv('HBNB_TYPE_STORAGE')
 
     if HBNB_TYPE_STORAGE == 'db':
-        cities = relationship("City", backref="state", cascade="all, delete-orphan")
+        cities = relationship("City", backref="state",
+                              cascade="all, delete-orphan")
     else:
         @property
         def cities(self):
             """Getter attribute that returns the list of City instances"""
             all_cities = models.storage.all("City")
-            state_cities = [city for city in all_cities.values() if city.state_id == self.id]
+            state_cities = [city for city in
+                            all_cities.values() if city.state_id == self.id]
             return state_cities
 
     def __init__(self, *args, **kwargs):
