@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """A script that starts a Flask web application"""
-from flask import Flask
+from flask import Flask, abort
 
 app = Flask(__name__)
 
@@ -37,7 +37,11 @@ def display_python(text='is cool'):
 @app.route('/number/<n>', strict_slashes=False)
 def display_num(n):
     """display num else send error"""
-    return f'{int(n)} is a number'
+    try:
+        num = int(n)
+        return f'{num} is a number'
+    except ValueError:
+        abort(404)
 
 
 if __name__ == '__main__':
