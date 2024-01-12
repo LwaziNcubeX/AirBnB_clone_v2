@@ -31,7 +31,7 @@ def display_python(text='is cool'):
     """display text after python Character"""
     input_text = text.replace('_', ' ')
 
-    return f'python {input_text}'
+    return f'Python {input_text}'
 
 
 if __name__ == '__main__':
